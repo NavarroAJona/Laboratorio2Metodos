@@ -44,35 +44,37 @@ def calculate_transitions(words, sequences):
     size = len(sequences)
     #Este sequencesSize se usa para mas adelante para
     #poder mezclar dos secuencias y ver si estan en una palabra
-    sequencesSize = len(sequences[0])
-    if(sequencesSize==1):
-        sequencesSize=0
+    sequencesSize = len(sequences[0])-1
     transitionMatrix = np.zeros((size,size))
+    print(words)
     for i in range(0,size):
-        divideValueCounter = 1
+        divideValueCounter = 0
         for j in range(0,size):
             sequencesMerged = sequences[i] + sequences[j][sequencesSize:]
             if(any(sequencesMerged in string for string in words)):
-                #Con esto cuento cuantas veces se repite una subbsecuencia en todas las palabras
-                sequencesCounter = [string for string in words if sequencesMerged in string]  
-                divideValueCounter +=1
-                transitionMatrix[i][j]=len(sequencesCounter)
+                sequencesCounter = len([string for string in words if sequencesMerged in string])
+                divideValueCounter +=sequencesCounter
+                transitionMatrix[i][j]=sequencesCounter
         for position in range(0,size):
             if(transitionMatrix[i][position]!=0):
                 transitionMatrix[i][position]=round(transitionMatrix[i][position]/divideValueCounter,3)
                 
-    print(transitionMatrix)
     return transitionMatrix
+
+def create_model(words,ngrams):
+    decorators = add_decorators(words,"$",ngrams)
+    sequence = get_sequences(decorators,ngrams)
+    matrix= calculate_transitions(decorators,sequence)
+    return (matrix,sequence)
 
 #Puse "wow" para comprobar que si nos funciona bien que si una subsecuencia
 #aparece dos veces entonces salga 0.66 y 0.33, ahi si ve la explicacion
 #del metodo 3 me entendera mejor creo
-entradaEjemplo = ['$hello$','$world$','$wow$']
+entradaEjemplo = ['hello','world']
 palabras = load_words("poke.csv")
-decorador = "$"
-#Sustituir con palabra si queremos cargar el csv
-decoradores = add_decorators(entradaEjemplo,decorador,2)
-secuencia= get_sequences(decoradores,1)
-calculate_transitions(entradaEjemplo,secuencia)
-print(secuencia)
+ngrama=1
+#cuando nos pongamos modo loco cambiamos entradaEjemplo por palabras
+#Creo que ya sirve para cualquier ngrama
+matrix,seq = create_model(entradaEjemplo,ngrama)
+print(matrix,seq)
 
