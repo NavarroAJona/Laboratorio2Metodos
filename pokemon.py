@@ -10,5 +10,17 @@ def load_words(filename):
             counter +=1
     return pokemonList
 
-hola= load_words("pokemon.csv")
+def add_decorators(words, decorator, n):
+    newList=[]
+    counterList=0
+    for pokemon in words:
+        innerCounter=0
+        while(innerCounter!=n):
+            pokemon = decorator + pokemon + decorator
+            innerCounter+=1
+        newList.insert(counterList,pokemon)
+        counterList+=1
+
+    return newList
+hola= add_decorators(load_words("poke.csv"),"$",2)
 print(hola)
