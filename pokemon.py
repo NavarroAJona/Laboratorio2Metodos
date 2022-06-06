@@ -1,7 +1,6 @@
 from ctypes.wintypes import HLOCAL
 from re import A
 from turtle import pos
-import pandas as pd
 import numpy as np
 
 #De momento no se hace ninguna limpieza ya que no parece necesario
@@ -41,25 +40,23 @@ def get_sequences(words, n):
 
 #Potencialmente nombres feos
 def calculate_transitions(words, sequences):
-    size = len(sequences)
-    #Este sequencesSize se usa para mas adelante para
-    #poder mezclar dos secuencias y ver si estan en una palabra
-    sequencesSize = len(sequences[0])-1
-    transitionMatrix = np.zeros((size,size))
-    print(words)
-    for i in range(0,size):
-        divideValueCounter = 0
-        for j in range(0,size):
-            sequencesMerged = sequences[i] + sequences[j][sequencesSize:]
-            if(any(sequencesMerged in string for string in words)):
-                sequencesCounter = len([string for string in words if sequencesMerged in string])
-                divideValueCounter +=sequencesCounter
-                transitionMatrix[i][j]=sequencesCounter
-        for position in range(0,size):
-            if(transitionMatrix[i][position]!=0):
-                transitionMatrix[i][position]=round(transitionMatrix[i][position]/divideValueCounter,3)
-                
-    return transitionMatrix
+    transitionDicts = {}
+    sequenceSize = len(sequences[0])
+    for sequenceOuter in sequences:
+        transitionDicts[sequenceOuter] = {}
+        for sequenceInner in sequences:
+           transitionDicts[sequenceOuter][sequenceInner] = 0 
+    for word in words:
+        wordLength = len(word)
+        for i in range(wordLength-1):
+            transitionDicts[word[i:i+sequenceSize]][word[i+1:i+1+sequenceSize]] += 1
+    sequenceAmount = len(sequences)
+    transitions = np.zeros((sequenceAmount, sequenceAmount) ,dtype=float)
+    for i in range(sequenceAmount):
+        for j in range(sequenceAmount):
+            transitions[i][j] = transitionDicts[sequences[i]][sequences[j]]
+        transitions[i] /= np.sum(transitions[i])
+    return transitions
 
 def create_model(words,ngrams):
     decorators = add_decorators(words,"$",ngrams)
@@ -75,6 +72,6 @@ palabras = load_words("poke.csv")
 ngrama=1
 #cuando nos pongamos modo loco cambiamos entradaEjemplo por palabras
 #Creo que ya sirve para cualquier ngrama
-matrix,seq = create_model(entradaEjemplo,ngrama)
-print(matrix,seq)
+#matrix,seq = create_model(entradaEjemplo,ngrama)
+#print(matrix,seq)
 
