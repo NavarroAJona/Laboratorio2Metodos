@@ -48,7 +48,7 @@ def calculate_transitions(words, sequences):
            transitionDicts[sequenceOuter][sequenceInner] = 0 
     for word in words:
         wordLength = len(word)
-        for i in range(wordLength-1):
+        for i in range(wordLength-sequenceSize):
             transitionDicts[word[i:i+sequenceSize]][word[i+1:i+1+sequenceSize]] += 1
     sequenceAmount = len(sequences)
     transitions = np.zeros((sequenceAmount, sequenceAmount) ,dtype=float)
@@ -56,6 +56,7 @@ def calculate_transitions(words, sequences):
         for j in range(sequenceAmount):
             transitions[i][j] = transitionDicts[sequences[i]][sequences[j]]
         transitions[i] /= np.sum(transitions[i])
+    print(transitions)
     return transitions
 
 def create_model(words,ngrams):

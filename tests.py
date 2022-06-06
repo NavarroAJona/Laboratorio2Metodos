@@ -18,6 +18,25 @@ class TestPokemon(unittest.TestCase):
         expectedOutputNumpy = np.array(expectedOutputPython)
         nptest.assert_array_equal(pokemon.calculate_transitions(words,sequences),expectedOutputNumpy, 
                         "Deberia dar la matriz {expectedOutput}")
+    def test_calculate_transitions_bigrams(self):
+        words = ['$$hello$$', '$$world$$']
+        sequences = ['$$', '$h', '$w', 'd$', 'el', 'he', 'ld', 'll', 'lo', 'o$', 'or', 'rl', 'wo']
+        expectedoutputpython = [[0,  0.5, 0.5, 0,  0,  0,  0,  0,  0,  0,  0,  0,  0 ],
+                                [0,  0,  0,  0,  0,  1,  0,  0,  0,  0,  0,  0,  0 ],
+                                [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1 ],
+                                [1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 ],
+                                [0,  0,  0,  0,  0,  0,  0,  1,  0,  0,  0,  0,  0 ],
+                                [0,  0,  0,  0,  1,  0,  0,  0,  0,  0,  0,  0,  0 ],
+                                [0,  0,  0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0 ],
+                                [0,  0,  0,  0,  0,  0,  0,  0,  1,  0,  0,  0,  0 ],
+                                [0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  0,  0,  0 ],
+                                [1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 ],
+                                [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  0 ],
+                                [0,  0,  0,  0,  0,  0,  1,  0,  0,  0,  0,  0,  0 ],
+                                [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  0,  0 ]]
+        expectedoutputnumpy = np.array(expectedoutputpython)
+        nptest.assert_array_equal(pokemon.calculate_transitions(words,sequences),expectedoutputnumpy, 
+                        "deberia dar la matriz {expectedoutput}")
 
 if __name__ == '__main__':
     unittest.main()
