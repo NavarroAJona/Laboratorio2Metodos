@@ -2,15 +2,16 @@ from ctypes.wintypes import HLOCAL
 from re import A
 from turtle import pos
 import numpy as np
-
+import random
 #De momento no se hace ninguna limpieza ya que no parece necesario
 def load_words(filename):
     pokemonList = []
     with open(filename, "r") as archive:
         counter=0
         for line in archive:
-            pokemonList.insert(counter,line.rstrip())
+            pokemonList.insert(counter,line.lower().replace("\n",""))
             counter +=1
+    print("AAAAAAAA",pokemonList)
     return pokemonList
 
 def add_decorators(words, decorator, n):
@@ -50,13 +51,13 @@ def calculate_transitions(words, sequences):
         wordLength = len(word)
         for i in range(wordLength-sequenceSize):
             transitionDicts[word[i:i+sequenceSize]][word[i+1:i+1+sequenceSize]] += 1
+
     sequenceAmount = len(sequences)
     transitions = np.zeros((sequenceAmount, sequenceAmount) ,dtype=float)
     for i in range(sequenceAmount):
         for j in range(sequenceAmount):
             transitions[i][j] = transitionDicts[sequences[i]][sequences[j]]
         transitions[i] /= np.sum(transitions[i])
-    print(transitions)
     return transitions
 
 def create_model(words,ngrams):
@@ -65,14 +66,16 @@ def create_model(words,ngrams):
     matrix= calculate_transitions(decorators,sequence)
     return (matrix,sequence)
 
-#Puse "wow" para comprobar que si nos funciona bien que si una subsecuencia
-#aparece dos veces entonces salga 0.66 y 0.33, ahi si ve la explicacion
-#del metodo 3 me entendera mejor creo
-entradaEjemplo = ['hello','world']
-palabras = load_words("poke.csv")
-ngrama=1
-#cuando nos pongamos modo loco cambiamos entradaEjemplo por palabras
-#Creo que ya sirve para cualquier ngrama
-#matrix,seq = create_model(entradaEjemplo,ngrama)
-#print(matrix,seq)
+def generate_word(model,seed):
+    print(seed)
+    print(model)
 
+entradaEjemplo = ['hello','world']
+e= ["casa"]
+palabras = load_words("poke.csv")
+ngrama=2
+r = random.Random()
+semilla =420
+r.seed(semilla)
+#a=generate_word(create_model(entradaEjemplo,ngrama),value)
+#print(matrix,seq)
