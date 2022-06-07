@@ -37,6 +37,15 @@ class TestPokemon(unittest.TestCase):
         expectedoutputnumpy = np.array(expectedoutputpython)
         nptest.assert_array_equal(pokemon.calculate_transitions(words,sequences),expectedoutputnumpy, 
                         "deberia dar la matriz {expectedoutput}")
+    
+    def test_pokemon_names(self):
+        palabras = pokemon.load_words("pokemon.csv")
+        model = pokemon.create_model(palabras,1)
+        self.assertEqual(pokemon.generate_word(model, 17), "Mowaror", "Deberia generar Mowaror")
+        model = pokemon.create_model(palabras,2)
+        self.assertEqual(pokemon.generate_word(model, 42), "Palassich", "Deberia generar Palassich")
+        model = pokemon.create_model(palabras,3)
+        self.assertEqual(pokemon.generate_word(model, 21), "Corinoon", "Deberia generar Corinoon")
 
 if __name__ == '__main__':
     unittest.main()

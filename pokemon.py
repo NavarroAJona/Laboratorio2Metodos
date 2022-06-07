@@ -11,7 +11,6 @@ def load_words(filename):
         for line in archive:
             pokemonList.insert(counter,line.lower().replace("\n",""))
             counter +=1
-    print("AAAAAAAA",pokemonList)
     return pokemonList
 
 def add_decorators(words, decorator, n):
@@ -32,7 +31,7 @@ def get_sequences(words, n):
     counterList = 0
     for word in words:
         innerRange=0
-        while(innerRange!=len(word)-1):
+        while(innerRange!=len(word)-n):
             subSequence = (word[innerRange:innerRange+n]).lower()
             if((subSequence in sequenceList)==False):
                 sequenceList.insert(counterList,subSequence)
@@ -67,15 +66,45 @@ def create_model(words,ngrams):
     return (matrix,sequence)
 
 def generate_word(model,seed):
-    print(seed)
-    print(model)
+    r = random.Random()
+    r.seed(seed)
+    transition, sequences = model
+    sequenceLength = len(sequences[0])
+    finished = False
+    endSequence = "$"*sequenceLength
+    generatedWord = ''
+    transitionRowIndex = 0
+    first = True
+    while not finished:
+        roll = r.random()
+        sum = 0
+        transitionColumnIndex = -1
+        while sum < roll:
+            transitionColumnIndex += 1
+            cellValue = transition[transitionRowIndex][transitionColumnIndex]
+            sum += cellValue
+        transitionRowIndex = transitionColumnIndex
+        if first:
+            generatedWord += sequences[transitionColumnIndex]
+            first = False
+        else:
+            generatedWord += sequences[transitionColumnIndex][-1]
+        finished = (sequences[transitionColumnIndex] == endSequence)
+    generatedWord = generatedWord.replace("$","")
+    return generatedWord.capitalize()
 
-entradaEjemplo = ['hello','world']
-e= ["casa"]
-palabras = load_words("poke.csv")
-ngrama=2
-r = random.Random()
-semilla =420
-r.seed(semilla)
+#entradaEjemplo = ['hello','world']
+#e= ["casa"]
+#palabras = load_words("pokemon.csv")
+#ngrama=2
+#model = create_model(palabras,1)
+#print(generate_word(model, 17))
+#model = create_model(palabras,2)
+#print(generate_word(model, 42))
+#model = create_model(palabras,3)
+#print(generate_word(model, 21))
+#r = random.Random()
+#semilla =420
+#r.seed(semilla)
 #a=generate_word(create_model(entradaEjemplo,ngrama),value)
 #print(matrix,seq)
