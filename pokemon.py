@@ -1,3 +1,7 @@
+#Dominic Tarassenko B97790
+#Jonathan Navarro B85580
+
+
 from ctypes.wintypes import HLOCAL
 from re import A
 from turtle import pos
@@ -99,11 +103,13 @@ def get_probability(model,word):
     for position in range(0,len(possiblePokemon)):
         subSequence1 = possiblePokemon[position:position+sequenceSize]
         subSequence2 = possiblePokemon[position+1:position+sequenceSize+1]
+        if subSequence2 not in sequences:
+            #Imposible crear la subsecuencia
+            probability = 0
+            break
         if(len(subSequence1)==len(subSequence2)):
-            print(transition[sequences.index(subSequence1)][sequences.index(subSequence2)])
             transitionValue = transition[sequences.index(subSequence1)][sequences.index(subSequence2)]
             probability = probability*transitionValue
-
     return probability
 
 
@@ -120,14 +126,25 @@ model3 = create_model(palabras,3)
 #valor3=get_probability(create_model(palabras,3),"mew")
 #print("proba1:", valor1)
 #print("proba2:", valor2)
-#pprint("proba3:", valor3)
+#print("proba3:", valor3)
 
+#valor1=get_probability(create_model(palabras,1),"dominic")
+#valor2=get_probability(create_model(palabras,2),"dominic")
+#valor3=get_probability(create_model(palabras,3),"dominic")
+#valor4=get_probability(create_model(palabras,3),"dominic")
+#print("proba1:", valor1)
+#print("proba2:", valor2)
+#print("proba3:", valor3)
+#print("proba4:", valor4)
 #ojo lo podemos cambiar jejeps
 
 #PARTE 8 DEL LABORATORIO
 #a ¿Por qué la probabilidad de formar un nombre parece aumentar conforme n incrementa?
-#R/ Esto se puede deber a que, al hacer ngramas mas grandes hay menos posibles combinaciones
-#de subsecuencias, lo que hace que cada posible paso de una subsecuencia a otra sea mayor
+#R/ Esto solo pasa con la probabilidad de formar un nombre de pokemon que esté en el csv.
+# Conforme n incrementa, la cantidad de nombres que se pueden crear disminuye, y como
+# la probabilidad de los nombres imposibles de formar con secuencias del n mayor se vuelve 0,
+# forsozamente los que siguen siendo posibles tienen que aumentar en probabilidad, 
+# para que todas las probabilidades sigan sumando 1
 
 #b ¿Encontró algún otro nombre interesante para un Pokemon? ¿Con qué n y con qué semilla? 
 # ¿Encontró algún nombre que no tiene sentido? ¿Con qué n y semilla? 
@@ -152,5 +169,7 @@ print("n=1 seed 863:",generate_word(model1,2869))
 
 #c Explique en sus propias palabras 
 # ¿de qué manera se están usando las cadenas de Markov para modelar los nombres?
-
-#R/
+#R/ Se está haciendo una cadena de markov en la que cada estado es el n-grama actual, y las probabilidades
+# de transición son las frecuencias normalizadas de los ngramas que le siguen a ese. De esta forma,
+# las secuencias de caracteres que más pasan en nombres de pokemon tienen mayor probabilidad de suceder
+# cuando se hace un recorrido para generar un nombre, y entonces se forman nombres que sí suenan como pokemons.
