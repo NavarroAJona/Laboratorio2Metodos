@@ -1,7 +1,6 @@
 #Dominic Tarassenko B97790
 #Jonathan Navarro B85580
 
-
 from ctypes.wintypes import HLOCAL
 from re import A
 from turtle import pos
@@ -114,36 +113,26 @@ def get_probability(model,word):
 
 
 
-seed = 5000
 palabras = load_words("pokemon.csv")
-model1 = create_model(palabras,1)
-model2 = create_model(palabras,2)
-model3 = create_model(palabras,3)
+model1 = create_model(palabras,1) #n=1
+model2 = create_model(palabras,2) #n=2
+model3 = create_model(palabras,3) #n=3
 
 
+#Para probar las probabilidades de crear mew:
 #valor1=get_probability(create_model(palabras,1),"mew")
 #valor2=get_probability(create_model(palabras,2),"mew")
 #valor3=get_probability(create_model(palabras,3),"mew")
-#print("proba1:", valor1)
-#print("proba2:", valor2)
-#print("proba3:", valor3)
-
-#valor1=get_probability(create_model(palabras,1),"dominic")
-#valor2=get_probability(create_model(palabras,2),"dominic")
-#valor3=get_probability(create_model(palabras,3),"dominic")
-#valor4=get_probability(create_model(palabras,3),"dominic")
-#print("proba1:", valor1)
-#print("proba2:", valor2)
-#print("proba3:", valor3)
-#print("proba4:", valor4)
-#ojo lo podemos cambiar jejeps
+#print("probabilidad n=1:", valor1)
+#print("probabilidad n=2:", valor2)
+#print("probabilidad n=3:", valor3)
 
 #PARTE 8 DEL LABORATORIO
 #a ¿Por qué la probabilidad de formar un nombre parece aumentar conforme n incrementa?
 #R/ Esto solo pasa con la probabilidad de formar un nombre de pokemon que esté en el csv.
 # Conforme n incrementa, la cantidad de nombres que se pueden crear disminuye, y como
 # la probabilidad de los nombres imposibles de formar con secuencias del n mayor se vuelve 0,
-# forsozamente los que siguen siendo posibles tienen que aumentar en probabilidad, 
+# forzosamente los que siguen siendo posibles tienen que aumentar en probabilidad, 
 # para que todas las probabilidades sigan sumando 1
 
 #b ¿Encontró algún otro nombre interesante para un Pokemon? ¿Con qué n y con qué semilla? 
@@ -151,21 +140,22 @@ model3 = create_model(palabras,3)
 # (Incluya el código de demostración)
 
 #R/ Entre los nombres interesantes o posibles que se generaron estaban:
-# Nomperio seed 863 n 2
-print("n=1 seed 863:",generate_word(model2,863))
-# Slygon seed 878 n 2
-print("n=1 seed 878:",generate_word(model2,878))
 # Huronda seed 885 n 1
 print("n=1 seed 885:",generate_word(model1,885))
+# Nomperio seed 863 n 2
+print("n=2 seed 863:",generate_word(model2,863))
+# Slygon seed 878 n 2
+print("n=2 seed 878:",generate_word(model2,878))
 # Marelphox seed 893 n 3
-print("n=1 seed 893:",generate_word(model3,893))
+print("n=3 seed 893:",generate_word(model3,893))
 #Entre los nombres que no tienen sentido estaban:
 # Nkiewawiopinittcrnonty seed 841 n 1
 print("n=1 seed 841:",generate_word(model1,841))
-# Excadabrawdaunchespirizionneking seed 855 n 2
-print("n=1 seed 855:",generate_word(model2,855))
 # Linachoranggupoweldeockiorsaneligro seed 2869 n 1 
-print("n=1 seed 863:",generate_word(model1,2869))
+print("n=1 seed 2869:",generate_word(model1,2869))
+# Excadabrawdaunchespirizionneking seed 855 n 3
+print("n=2 seed 855:",generate_word(model3,855))
+
 
 #c Explique en sus propias palabras 
 # ¿de qué manera se están usando las cadenas de Markov para modelar los nombres?
